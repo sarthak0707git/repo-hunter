@@ -5,6 +5,7 @@
 :root {
   --bg-primary: #111111;
   --bg-secondary: #222222;
+  --bg-tertiary: #000000;
   --accent-primary: #ff4e4e;
   --accent-secondary: #ff8989;
   --text-primary: #ffffff;
@@ -13,7 +14,8 @@
 
 [data-theme = "light"] {
   --bg-primary: #f9f9f9;
-  --bg-secondary: #ffffff;
+  --bg-secondary: #eeeeee;
+  --bg-tertiary: #ffffff;
   --accent-primary: #e11d48; 
   --accent-secondary: #f43f5e; 
   --text-primary: #111111;
