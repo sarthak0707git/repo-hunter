@@ -5,9 +5,12 @@ const router = express.Router();
 const octokit = new Octokit({
   auth: process.env.GITHUB_TOKEN,
 });
-router.get("/", async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const { topics = [] } = req.body;
+    if (!topics.length) {
+      return res.status(400).json({ message: "No topics provided" });
+    }
     const modifiedTopics = [];
     /*
     const topics = [
@@ -30,7 +33,7 @@ router.get("/", async (req, res) => {
     ];
     */
     for (let i = 0; i < topics.length; i += 6) {
-      modifiedTopics.push(topics.splice(i, i + 6));
+      modifiedTopics.push(topics.slice(i, i + 6));
     }
     /*
      TRY THIS IF YOU ARE NOT GETTING RESULTS 
