@@ -69,20 +69,23 @@ function DomainSelector({ setTopics }) {
     };
 
     return (
-        <div className="w-full flex flex-col items-center gap-4 mt-8">
-            <h2 className="text-2xl font-semibold mb-2 text-[var(--text-primary)]">
+        <div className="flex w-full flex-col items-center gap-8 rounded-lg border border-[var(--border-muted)] bg-[var(--bg-secondary)] p-8 text-center shadow-sm shadow-[var(--shadow)] ">
+            <h2 className="text-2xl font-semibold tracking-tight text-[var(--text-strong)] sm:text-3xl">
                 Select Domains
             </h2>
+            <p className="max-w-3xl text-sm text-[var(--text-secondary)] sm:text-base">
+                Choose one or more focus areas to explore GitHub topics curated for that domain.
+            </p>
 
-            <div className="flex flex-wrap justify-center gap-3 max-w-3xl">
+            <div className="flex w-full flex-wrap justify-center gap-3 rounded-md border border-[var(--border-muted)] bg-[var(--bg-tertiary)] p-4 sm:gap-4 sm:p-8">
                 {domains.map((domain) => (
                     <button
                         key={domain}
                         onClick={() => handleDomainClick(domain)}
-                        className={`px-4 py-2 rounded-lg border transition-all duration-200 
+                        className={`rounded-md px-4 py-2 text-sm font-medium transition-all duration-150 sm:px-5 sm:py-2.5 
               ${selectedDomains.includes(domain)
-                                ? "bg-[var(--accent-primary)] text-white border-[var(--accent-primary)]"
-                                : "bg-[var(--bg-secondary)] text-[var(--text-primary)] border-[var(--text-secondary)] hover:border-[var(--accent-secondary)]"
+                                ? "bg-[var(--button-primary-bg)] text-white shadow-sm shadow-[var(--button-primary-bg)]/30 hover:bg-[var(--button-primary-hover)]"
+                                : "border border-[var(--border-muted)] bg-[var(--bg-fourth)] text-[var(--text-strong)] hover:border-[var(--text-tertiary)] hover:bg-[var(--bg-hover)]"
                             }`}
                     >
                         {domain}
@@ -91,15 +94,20 @@ function DomainSelector({ setTopics }) {
             </div>
 
             {topics.length > 0 && (
-                <div className="w-full max-w-3xl mt-8 bg-[var(--bg-secondary)] p-4 rounded-lg shadow-md border border-[var(--text-secondary)]/20">
-                    <h3 className="text-xl font-medium mb-3 text-[var(--accent-primary)]">
-                        Topics from selected domains:
-                    </h3>
+                <div className="panel-animate w-full rounded-md border border-[var(--border-muted)] bg-[var(--bg-secondary)] p-5 text-left shadow-inner shadow-[var(--shadow)]/60 sm:p-6">
+                    <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+                        <h3 className="text-lg font-semibold text-[var(--text-strong)] sm:text-xl">
+                            Topics from selected domains
+                        </h3>
+                        <span className="rounded-full border border-[var(--border-muted)] bg-[var(--bg-fourth)] px-3 py-1 text-xs font-medium uppercase tracking-wider text-[var(--text-tertiary)]">
+                            {topics.length} {topics.length === 1 ? "topic" : "topics"}
+                        </span>
+                    </div>
                     <div className="flex flex-wrap gap-2">
                         {topics.map((topic, idx) => (
                             <span
                                 key={idx}
-                                className="px-3 py-1 rounded-full text-sm bg-[var(--bg-tertiary)] text-[var(--text-secondary)] border border-[var(--text-secondary)]/30"
+                                className="topic-animate rounded-full border border-[var(--border-muted)] bg-[var(--bg-fourth)] px-3 py-1 text-sm text-[var(--text-tertiary)]"
                             >
                                 {topic}
                             </span>

@@ -1,9 +1,16 @@
 import ThemeToggle from "./ThemeToggle";
 
 function Topbar() {
-    return <div className="bg-gradient-to-b from-bg-tert to-bg-sec sticky w-full top-0 left-0 z-[1000] text-text flex items-center justify-end px-[50px] h-[75px]  shadow shadow-text mb-[20px]">
-        <ThemeToggle />
-    </div>
+    return (
+        <header className="sticky top-0 z-40 w-full border-b border-[var(--border-strong)] bg-[var(--bg-primary)] backdrop-blur">
+            <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+                <span className="text-base font-semibold tracking-tight text-[var(--text-primary)] sm:text-lg">
+                    REPO HUNTER
+                </span>
+                <ThemeToggle />
+            </div>
+        </header>
+    );
 }
 
 export default Topbar;

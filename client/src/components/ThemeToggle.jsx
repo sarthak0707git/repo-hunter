@@ -14,11 +14,11 @@ function ThemeToggle() {
     <div
       id="theme-toggle"
       onClick={() => setIsLight(!isLight)}
-      className="text-text border border-text rounded-full w-16 h-8 bg-bg-sec flex items-center transition-colors hover:bg-bg-tert cursor-pointer"
+      className="flex h-9 w-16 cursor-pointer items-center rounded-full border border-[var(--border-strong)] bg-[var(--surface-toggle)] px-1 transition-colors duration-200 hover:bg-[var(--bg-hover)]"
     >
       <div
         id="switch"
-        className={`bg-text w-6 h-6 rounded-full ml-1 transition-transform duration-300 ${isLight ? "translate-x-8" : "translate-x-0"
+        className={`h-6 w-6 rounded-full bg-[var(--text-primary)] transition-transform duration-300 ${isLight ? "translate-x-7" : "translate-x-0"
           }`}
       ></div>
     </div>
