@@ -2,74 +2,18 @@ import { useEffect, useState } from "react";
 import TopicBox from "./TopicBox";
 
 
-function DomainSelector({ setTopics }) {
-    const [domains, setDomains] = useState([]);
-    const [selectedDomains, setSelectedDomains] = useState([]);
-    const [topics, setLocalTopics] = useState([]);
-
-    useEffect(() => {
-        const fetchDomains = async () => {
-            try {
-                const response = await fetch("http://localhost:5000/api/domain", {
-                    method: "GET",
-                    headers: { "Content-Type": "application/json" },
-                });
-                if (response.ok) {
-                    const data = await response.json();
-                    setDomains(data);
-                } else {
-                    console.error("Failed to fetch domains");
-                }
-            } catch (error) {
-                console.error("Error fetching domains:", error);
-            }
-        };
-        fetchDomains();
-    }, []);
-
-    //when we click a domain
-    const handleDomainClick = async (domain) => {
-        //unselecting
-        if (selectedDomains.includes(domain)) {
-            setSelectedDomains((prev) => prev.filter((d) => d !== domain));
-
-            //removing topics if unselected
-            try {
-                const response = await fetch(`http://localhost:5000/api/domain/${domain}`, {
-                    method: "GET",
-                    headers: { "Content-Type": "application/json" },
-                });
-                if (response.ok) {
-                    const data = await response.json(); // its topics
-                    setLocalTopics((prev) => prev.filter((t) => !data.includes(t)));
-                    setTopics((prev) => prev.filter((t) => !data.includes(t)));
-                }
-            } catch (error) {
-                console.error("Error removing topics for unselected domain:", error);
-            }
-            return;
-        }
-
-        //if selected, fetches topics
-        try {
-            const response = await fetch(`http://localhost:5000/api/domain/${domain}`, {
-                method: "GET",
-                headers: { "Content-Type": "application/json" },
-            });
-
-            if (response.ok) {
-                const data = await response.json(); // array of topics
-                setSelectedDomains((prev) => [...prev, domain]);
-                setLocalTopics((prev) => [...prev, ...data]);
-                setTopics((prev) => [...prev, ...data]); // update global topics
-            } else {
-                console.error(`Failed to fetch topics for ${domain}`);
-            }
-        } catch (error) {
-            console.error("Error fetching topics:", error);
-        }
-    };
-
+function DomainSelector({
+    domains,
+    selectedDomains,
+    topics,
+    handleDomainClick,
+    selectedTopics,
+    repos,
+    loading,
+    error,
+    toggleTopic,
+    fetchRepos,
+}) {
     return (
         <div className="flex w-full flex-col items-center gap-8 rounded-lg border border-[var(--border-muted)] bg-[var(--bg-secondary)] p-8 text-center shadow-sm shadow-[var(--shadow)] ">
             <h2 className="text-2xl font-semibold tracking-tight text-[var(--text-strong)] sm:text-3xl">
@@ -83,7 +27,7 @@ function DomainSelector({ setTopics }) {
                 {domains.map((domain) => (
                     <button
                         key={domain}
-                        onClick={() => handleDomainClick(domain)}
+                        onClick={() => handleDomainClick(domain)} // Use the prop handler
                         className={`rounded-md px-4 py-2 text-sm font-medium transition-all duration-150 sm:px-5 sm:py-2.5 
               ${selectedDomains.includes(domain)
                                 ? "bg-[var(--button-primary-bg)] text-white shadow-sm shadow-[var(--button-primary-bg)]/30 hover:bg-[var(--button-primary-hover)]"
@@ -94,7 +38,15 @@ function DomainSelector({ setTopics }) {
                     </button>
                 ))}
             </div>
-            <TopicBox topics={topics} />
+            <TopicBox
+                topics={topics}
+                selectedTopics={selectedTopics}
+                repos={repos}
+                loading={loading}
+                error={error}
+                toggleTopic={toggleTopic}
+                fetchRepos={fetchRepos}
+            />
         </div>
     );
 }

@@ -1,53 +1,17 @@
-import { useState } from "react";
+import React from "react";
 import Card from "./card.jsx";
 
-function TopicBox({ topics }) {
-    const [selectedTopics, setSelectedTopics] = useState([]);
-    const [repos, setRepos] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+function TopicBox({
+    topics,
+    selectedTopics,
+    repos,
+    loading,
+    error,
+    toggleTopic,
+    fetchRepos,
+}) {
 
     if (!topics || topics.length === 0) return null;
-
-    const toggleTopic = (topic) => {
-        setSelectedTopics((prev) =>
-            prev.includes(topic) ? prev.filter((t) => t !== topic) : [...prev, topic]
-        );
-    };
-
-    const fetchRepos = async () => {
-        // don't call if nothing selected
-        if (selectedTopics.length === 0) {
-            setError("Select at least one topic before searching.");
-            return;
-        }
-
-        setError(null);
-        setLoading(true);
-        try {
-            const res = await fetch("http://localhost:5000/api/repos", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ topics: selectedTopics }),
-            });
-
-            //error
-            if (!res.ok) {
-                const body = await res.json().catch(() => ({}));
-                throw new Error(body?.message || `Server returned ${res.status}`);
-            }
-
-            //got repos
-            const data = await res.json();
-            setRepos(data || []);
-        } catch (err) {
-            console.error("Repo search failed:", err);
-            setError("Repo search failed. See console for details.");
-            setRepos([]);
-        } finally {
-            setLoading(false);
-        }
-    };
 
     return (
         <>
@@ -80,8 +44,8 @@ function TopicBox({ topics }) {
                                 key={idx}
                                 onClick={() => toggleTopic(topic)}
                                 className={`cursor-pointer select-none rounded-full border px-3 py-1 text-sm transition-all ${isSelected
-                                        ? "bg-[var(--button-primary-bg)] text-white border-transparent"
-                                        : "border-[var(--border-muted)] bg-[var(--bg-fourth)] text-[var(--text-tertiary)]"
+                                    ? "bg-[var(--button-primary-bg)] text-white border-transparent"
+                                    : "border-[var(--border-muted)] bg-[var(--bg-fourth)] text-[var(--text-tertiary)]"
                                     }`}
                             >
                                 {topic}

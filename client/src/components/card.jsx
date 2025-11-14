@@ -29,7 +29,7 @@ export default function Card({ repo }) {
       <p className="text-sm text-[var(--text-secondary)]">{repo.fullname}</p>
 
       <p className="mt-1 text-sm text-[var(--text-tertiary)]">
-        ⭐ {repo.stars} • 🍴 {repo.forks}
+        ☆ {repo.stars} • ⑂ {repo.forks}
       </p>
 
       {repo.language && (
