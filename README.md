@@ -1,54 +1,66 @@
-About
+
+# Repo Hunter
+
 Repo Hunter is a tool that helps you discover high-quality GitHub repositories based on the topics/domains you select from the available list.
 
-Features
--Select multiple domains/topics
--Calls backend APIs to fetch GitHub repos
--Displays repositories in cards with details
--Fully modular React components
 
-Folder Structure
-repo-hunter/
-│
-├── client/                 # React Frontend
-│   ├── src/
-│   │   ├── components/     # UI components (TopicBox, Card, etc.)
-│   │   ├── pages/
-│   │   ├── utils/
-│   │   └── main.jsx
-│   ├── index.html
-│   └── package.json
-│
-├── server/                 # Node.js Express Backend
-│   ├── server.js
-│   ├── routes/
-│   │   ├── getRepos.js
-│   │   ├── domain.js
-│   │   └── commits.js
-│   ├── services/
-│   └── package.json
-│
-└── README.md
+## Features
 
-Backend Setup
--cd server # Navigate to backend
--npm install # Install dependencies
-    GITHUB_TOKEN="your_github_pat_here" # in .env file, change token
--node server.js # Run the backend server at http://localhost:5000
+- Light/dark mode toggle
+- Select multiple domains/topics 
+- Calls backend APIs to fetch GitHub repos 
+- Displays repositories in cards with details 
+- Fully modular React components
+
+## Run Locally
+
+Clone the project
+
+```bash
+  git clone https://github.com/Prashant-SG14/repo-hunter.git
+```
+
+Go to the backend directory
+
+```bash
+  cd server
+```
+
+Install dependencies
+
+```bash
+  npm install
+```
+
+Start the server (localhost:5000)
+
+```bash
+  npm node server.js
+```
+
+Go to the front end directory
+
+```bash
+  cd ..\client
+```
+
+Install dependencies
+
+```bash
+  npm install
+```
+
+Run the website (localhost:5173)
+
+```bash
+  npm run dev
+```
 
 
-Frontend Setup
--cd client # Navigate to frontend
--npm install # Install dependencies
--npm run dev # Start development server at http://localhost:5173
+## Tech Stack
 
-Tech Stack
-    Frontend : React | Vite | TailwindCSS
-    Backend : Node.js | Express.js 
+**Client:** React | Vite | TailwindCSS
+
+**Server:** Node | Express
 
 
-Future Improvements
--Pagination for large repo lists
--Filters → stars, language, recency
--Saving favorite repos
--Deployed version
