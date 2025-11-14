@@ -14,7 +14,7 @@ function App() {
   return (
     <div className="flex min-h-screen flex-col bg-[var(--bg-primary)] text-[var(--text-primary)] antialiased">
       <Topbar />
-      <main className="mx-auto max-w-5xl flex w-full flex flex-col gap-10 px-4 py-12 ">
+      <main className="mx-auto max-w-5xl flex w-full flex-col gap-10 px-4 py-12 ">
         <DomainSelector setTopics={setTopics} />
 
       </main>
