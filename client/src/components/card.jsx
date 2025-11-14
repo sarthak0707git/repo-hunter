@@ -1,43 +1,20 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { repoStorage } from "../utils/repoStorage";
 
 export default function Card({ repo }) {
-  const handleClick = async () => {
-    console.log("Card clicked:", repo.fullname);
+  const navigate = useNavigate();
 
-    try {
-      const res = await fetch(`http://localhost:5000/api/commits`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ repo: repo }),
-      });
+  // Saving Repos
+  const [isSaved, setIsSaved] = useState(false);
+  useEffect(() => {
+    setIsSaved(repoStorage.isRepoSaved(repo.fullname));
+  }, [repo.fullname]);
 
-      if (res.ok) {
-        console.log(res.status);
 
-        const commitData = await res.json();
-        console.log("commitData is " + commitData);
-        const weeksPerMonth = 4; // rough average
-        let monthlyData = [];
-
-        for (let i = 0; i < commitData.length; i += weeksPerMonth) {
-          const monthSlice = commitData.slice(i, i + weeksPerMonth);
-
-          const totalCommits = monthSlice.reduce(
-            (sum, week) => sum + week.total,
-
-            0,
-          );
-
-          monthlyData.push(totalCommits);
-        }
-        if (monthlyData.length == 0) {
-          monthlyData = Array(13).fill(0);
-        }
-        console.log(monthlyData);
-      }
-    } catch (error) {
-      console.error(error);
-    }
+  const handleClick = () => {
+    //FUNCTIONALITY JAGGU/PRASHU
+    navigate(`/repo/${repo.owner_login}/${repo.name}`);
   };
 
   return (
@@ -52,7 +29,7 @@ export default function Card({ repo }) {
       <p className="text-sm text-[var(--text-secondary)]">{repo.fullname}</p>
 
       <p className="mt-1 text-sm text-[var(--text-tertiary)]">
-        ⭐ {repo.stars} • 🍴 {repo.forks}
+        ☆ {repo.stars} • ⑂ {repo.forks}
       </p>
 
       {repo.language && (
@@ -70,12 +47,19 @@ export default function Card({ repo }) {
       <button
         className="mt-3 rounded-md bg-[var(--button-primary-bg)] px-3 py-1 text-sm text-white hover:bg-[var(--button-primary-hover)]"
         onClick={(e) => {
+
           e.stopPropagation();
-          console.log("Save clicked:", repo.fullname);
+          if (isSaved) {
+            repoStorage.removeRepo(repo.fullname);
+            setIsSaved(false);
+          } else {
+            repoStorage.saveRepo(repo);
+            setIsSaved(true);
+          }
         }}
       >
-        Save
-      </button>
-    </div>
+      {isSaved ? "Saved": "Save"}
+    </button>
+    </div >
   );
 }
