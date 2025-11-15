@@ -18,13 +18,15 @@ router.post("/", async (req, res) => {
     full_name: "dtrupenn/Tetris",
   };
   */
+  const query = `repo:${repo.owner.login}/${repo.name} type:issue label:"good first issue" `;
   try {
     const response = await octokit.request("GET /search/issues", {
-      q: `repo:${repo.owner.login}/${repo.name} state:open (label:"good first issue" OR label:"help wanted" OR label:"Good first Issue") `,
+      q: query,
       headers: {
         "X-GitHub-Api-Version": "2022-11-28",
       },
     });
+    console.log("TOTAL COUNT:", response.data.total_count);
     res.json(response.data.total_count);
   } catch (error) {
     console.error(error);

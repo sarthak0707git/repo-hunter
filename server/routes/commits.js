@@ -7,7 +7,7 @@ const octokit = new Octokit({
 });
 
 router.post("/", async (req, res) => {
-  const { repo } = req.body;
+  const { owner, repo } = req.body;
   /*
   const repo = {
     owner: {
@@ -22,8 +22,8 @@ router.post("/", async (req, res) => {
     const response = await octokit.request(
       "GET /repos/{owner}/{repo}/stats/commit_activity",
       {
-        owner: repo.owner.login,
-        repo: repo.name,
+        owner: owner,
+        repo: repo,
         headers: {
           "X-GitHub-Api-Version": "2022-11-28",
         },

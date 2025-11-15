@@ -1,84 +1,73 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import CommitChart from "../components/graph.jsx";
-
 function Insights() {
-    const { owner, repo } = useParams();
-    const [commitData, setCommitData] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+  const { owner, repo } = useParams();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [monthlyData, setMonthlyData] = useState([]);
+  useEffect(() => {
+    const fetchCommitData = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/commits", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ owner: owner, repo: repo }),
+        });
+        if (res.ok) {
+          const commitData = await res.json();
+          const weeks = commitData;
+          console.log("commitData is ", commitData);
+          const weeksPerMonth = 4; // rough average
+          let months = [];
+          for (let i = 0; i < weeks.length; i += weeksPerMonth) {
+            const monthSlice = weeks.slice(i, i + weeksPerMonth);
 
+            const totalCommits = monthSlice.reduce(
+              (sum, week) => sum + week.total,
+              0,
+            );
 
-    useEffect(() => {
-        const fetchCommitData = async () => {
-            setLoading(true);
-            setError(null);
-            try {
-                const res = await fetch(
-                    `http://localhost:5000/api/commits/${owner}/${repo}`
-                );
-                if (!res.ok) {
-                    const errData = await res.json().catch(() => ({}));
-                    throw new Error(errData.error || "Failed to fetch commit data");
-                }
+            months.push(totalCommits);
+          }
+          if (months.length === 0) months = Array(13).fill(0);
 
-                const weeklyData = await res.json(); // 52 Weeks
+          setMonthlyData(months);
+          console.log("Monthly:", months);
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCommitData();
+  }, [owner, repo]);
 
-                if (!Array.isArray(weeklyData) || weeklyData.length === 0) {
-                    throw new Error(
-                        "Commit data is not available or is still being computed. Try again in a moment."
-                    );
-                }
+  return (
+    <main className="mx-auto max-w-5xl flex w-full flex-col gap-10 px-4 py-12 ">
+      <h1 className="text-2xl font-semibold tracking-tight text-[var(--text-strong)] sm:text-3xl">
+        Insights for: {owner}/{repo}
+      </h1>
+      <div className="flex flex-row">
+        {loading && <p>Loading commit data...</p>}
 
-                // Last 24 weeks
-                const weeksPerMonth = 4;
-                const monthsToShow = 6;
-                const recentWeeks = weeklyData.slice(-weeksPerMonth * monthsToShow);
-                const monthlyData = [];
+        {error && <p className="text-red-500">Error: {error}</p>}
 
-                for (let i = 0; i < recentWeeks.length; i += weeksPerMonth) {
-                    const monthSlice = recentWeeks.slice(i, i + weeksPerMonth);
-                    const totalCommits = monthSlice.reduce(
-                        (sum, week) => sum + week.total,
-                        0
-                    );
-                    monthlyData.push(totalCommits);
-                }
+        {!loading && !error && monthlyData.length > 0 && (
+          <CommitChart commitData={monthlyData} />
+        )}
 
-                // Ensure 6 data points
-                while (monthlyData.length < monthsToShow) monthlyData.unshift(0);
-                
-                setCommitData(monthlyData);
-            } catch (err) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchCommitData();
-    }, [owner, repo]); 
-
-    return (
-        <main className="mx-auto max-w-5xl flex w-full flex-col gap-10 px-4 py-12 ">
-            <h1 className="text-2xl font-semibold tracking-tight text-[var(--text-strong)] sm:text-3xl">
-                Insights for: {owner}/{repo}
-            </h1>
-
-            <div className="h-64 w-full rounded-lg border border-[var(--border-muted)] bg-[var(--bg-secondary)] p-6 shadow-sm shadow-[var(--shadow)]">
-                {loading && (
-                    <p className="text-[var(--text-secondary)]">Loading commit data...</p>
-                )}
-
-                {error && <p className="text-red-500">{error}</p>}
-
-                {commitData && (
-                    <CommitChart commitData={commitData} />
-                )}
-            </div>
-        </main>
-    );
+        {!loading && !error && monthlyData.length === 0 && (
+          <p>No commit data available</p>
+        )}
+        <div className="w-1/2">
+          <p>Display repo details in this box</p>
+        </div>
+      </div>
+    </main>
+  );
 }
 
-
 export default Insights;
+

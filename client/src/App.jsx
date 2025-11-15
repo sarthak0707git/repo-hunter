@@ -5,6 +5,7 @@ import "./App.css";
 import Topbar from "./components/Topbar";
 import Footer from "./components/Footer";
 import DomainSelector from "./components/DomainSelector";
+import Insights from "./pages/Insights";
 
 function HomePage({
   domains,
@@ -41,7 +42,7 @@ function HomePage({
     </main>
   );
 }
-
+/*
 function Insights() {
 
   const { owner, repo } = useParams();
@@ -51,10 +52,7 @@ function Insights() {
       <h1 className="text-2xl font-semibold tracking-tight text-[var(--text-strong)] sm:text-3xl">
         Insights for: {owner}/{repo}
       </h1>
-      {/* Add commit chart n other stuff  */}
-    </main>
-  );
-}
+    Add commit chart n other stuff  */
 
 function App() {
   const [domains, setDomains] = useState([]);
@@ -130,6 +128,7 @@ function App() {
     }
   };
 
+  // Topic/Repo Functions (Moved from TopicBox)
   const toggleTopic = (topic) => {
     setSelectedTopics((prev) =>
       prev.includes(topic) ? prev.filter((t) => t !== topic) : [...prev, topic],
@@ -138,7 +137,9 @@ function App() {
 
   const toggleLanguage = (language) => {
     setSelectedLanguages((prev) =>
-      prev.includes(language) ? prev.filter((l) => l !== language) : [...prev, language]
+      prev.includes(language)
+        ? prev.filter((l) => l !== language)
+        : [...prev, language],
     );
   };
 
@@ -158,7 +159,9 @@ function App() {
       if (!res.ok) throw new Error(`Server returned ${res.status}`);
       const data = await res.json();
       setRepos(data || []);
-      const langs = Array.from(new Set((data || []).map((r) => r.language).filter(Boolean)));
+      const langs = Array.from(
+        new Set((data || []).map((r) => r.language).filter(Boolean)),
+      );
       setLanguages(langs);
       setSelectedLanguages([]);
     } catch (err) {

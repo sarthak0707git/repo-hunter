@@ -6,6 +6,7 @@ export default function Card({ repo, clusterName, onRemove }) {
   const navigate = useNavigate();
   const [monthlyData, setMonthlyData] = useState([]);
   const [helpfulIssues, setHelpfulIssues] = useState([]);
+<<<<<<< HEAD
   const [showMenu, setShowMenu] = useState(false);
   const [allClusters, setAllClusters] = useState([]);
   const [repoClusters, setRepoClusters] = useState([]);
@@ -14,6 +15,11 @@ export default function Card({ repo, clusterName, onRemove }) {
   const [isSaved, setIsSaved] = useState(false);
   useEffect(() => {
     setIsSaved(clusterStorage.IsRepoSavedInAnyCluster(repo.fullname));
+=======
+  const [isSaved, setIsSaved] = useState(false);
+  useEffect(() => {
+    setIsSaved(repoStorage.isRepoSaved(repo.fullname));
+>>>>>>> e12cbd9 (modified graph,insights page)
   }, [repo.fullname]);
 
   useEffect(() => {
@@ -29,6 +35,7 @@ export default function Card({ repo, clusterName, onRemove }) {
   const handleClick = async () => {
     console.log("Card clicked:", repo.fullname);
 
+<<<<<<< HEAD
     navigate(`/repo/${repo.owner_login}/${repo.name}`);
     try {
       const res = await fetch("http://localhost:5000/commits", {
@@ -56,6 +63,11 @@ export default function Card({ repo, clusterName, onRemove }) {
       setMonthlyData(months);
       console.log("Monthly:", months);
 
+=======
+    // Saving Repos
+    navigate(`/repo/${repo.owner.login}/${repo.name}`);
+    try {
+>>>>>>> e12cbd9 (modified graph,insights page)
       const response = await fetch(`http://localhost:5000/api/issues`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -63,9 +75,8 @@ export default function Card({ repo, clusterName, onRemove }) {
       });
       if (response.ok) {
         const issues = await response.json();
-        console.log(issues);
         setHelpfulIssues(issues);
-        console.log("issues" + helpfulIssues);
+        console.log("issues", issues);
       }
     } catch (error) {
       console.error(error);

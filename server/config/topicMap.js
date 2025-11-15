@@ -2,6 +2,7 @@
 export const domainTopicsMap = {
   "Web Development": {
     topics: [
+      "javascript",
       "react",
       "vue",
       "angular",
@@ -10,12 +11,12 @@ export const domainTopicsMap = {
       "express",
       "graphql",
       "rest-api",
-      "webpack",
       "typescript",
-      "progressive-web-app",
-      "serverless",
+      "frontend",
+      "fullstack",
     ],
   },
+
   "DevOps & Cloud": {
     topics: [
       "docker",
@@ -26,12 +27,13 @@ export const domainTopicsMap = {
       "cicd",
       "aws",
       "azure",
-      "monitoring",
-      "infrastructure-as-code",
-      "microservices",
-      "helm",
+      "gcp",
+      "observability",
+      "prometheus",
+      "grafana",
     ],
   },
+
   "Machine Learning & AI": {
     topics: [
       "machine-learning",
@@ -45,9 +47,10 @@ export const domainTopicsMap = {
       "scikit-learn",
       "keras",
       "transformers",
-      "mlops",
+      "llm",
     ],
   },
+
   "Blockchain & Web3": {
     topics: [
       "blockchain",
@@ -61,25 +64,27 @@ export const domainTopicsMap = {
       "dapp",
       "cryptography",
       "polygon",
-      "layer2",
+      "zk",
     ],
   },
+
   "Systems Programming": {
     topics: [
       "operating-systems",
-      "systems-programming",
-      "embedded-systems",
+      "osdev",
       "kernel",
       "compilers",
-      "memory-management",
+      "assembly",
+      "embedded",
+      "firmware",
       "concurrency",
       "networking",
-      "low-level",
-      "assembly",
-      "performance",
-      "real-time",
+      "linux",
+      "virtualization",
+      "profiling",
     ],
   },
+
   "Mobile Development": {
     topics: [
       "android",
@@ -92,43 +97,45 @@ export const domainTopicsMap = {
       "jetpack-compose",
       "swiftui",
       "cross-platform",
-      "pwa",
       "expo",
+      "pwa",
     ],
   },
+
   Cybersecurity: {
     topics: [
       "security",
       "cybersecurity",
-      "penetration-testing",
-      "cryptography",
-      "vulnerability",
-      "ethical-hacking",
       "infosec",
-      "malware-analysis",
+      "ethical-hacking",
+      "penetration-testing",
+      "vulnerabilities",
+      "malware",
       "reverse-engineering",
-      "network-security",
-      "osint",
+      "web-security",
+      "owasp",
+      "forensics",
       "ctf",
     ],
   },
+
   "Game Development": {
     topics: [
-      "game-development",
       "gamedev",
+      "game-development",
       "unity",
       "unreal-engine",
       "godot",
       "game-engine",
       "3d",
       "2d",
-      "blender",
       "graphics",
-      "physics",
       "shader",
       "multiplayer",
+      "opengl",
     ],
   },
+
   "Data Science & Analytics": {
     topics: [
       "data-science",
@@ -145,6 +152,7 @@ export const domainTopicsMap = {
       "spark",
     ],
   },
+
   "IoT & Embedded": {
     topics: [
       "iot",
@@ -158,25 +166,27 @@ export const domainTopicsMap = {
       "hardware",
       "robotics",
       "microcontroller",
-      "home-automation",
+      "rtos",
     ],
   },
+
   "Backend & Databases": {
     topics: [
       "backend",
       "api",
-      "rest",
+      "rest-api",
       "graphql",
       "database",
       "postgresql",
       "mongodb",
+      "mysql",
       "redis",
-      "microservices",
-      "serverless",
       "authentication",
       "orm",
+      "caching",
     ],
   },
+
   "Cloud Native": {
     topics: [
       "cloud-native",
@@ -184,13 +194,13 @@ export const domainTopicsMap = {
       "docker",
       "service-mesh",
       "istio",
-      "serverless",
       "containers",
       "helm",
-      "observability",
       "distributed-systems",
       "grpc",
-      "cncf",
+      "observability",
+      "k8s",
+      "service-discovery",
     ],
   },
 };

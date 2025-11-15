@@ -1,7 +1,9 @@
 import express from "express";
 import { Octokit } from "@octokit/core";
+import { paginateRest } from "@octokit/plugin-paginate-rest";
 const router = express.Router();
 
+const MyOctokit = Octokit.plugin(paginateRest);
 const octokit = new Octokit({
   auth: process.env.GITHUB_TOKEN,
 });
@@ -47,21 +49,26 @@ router.post("/", async (req, res) => {
     const allrepos = [];
     for (const chunk of modifiedTopics) {
       const topicPart = chunk.join(" OR ");
-      const query = `${topicPart} in:readme,topics,description,name archived:false mirror:false template:false good-first-issues:>4 `;
+      const query = `${topicPart} in:readme,topics,description,name archived:false mirror:false template:false stars:>500 `;
       const response = await octokit.request("GET /search/repositories", {
         q: query,
         order: "desc",
         per_page: 100,
-        page: 1,
         headers: {
           Accept: "application/vnd.github+json",
           "X-GitHub-Api-Version": "2022-11-28",
         },
+        // Extract items from each page
       });
+      console.log(`Found ${response.length} repos for query: ${query}`);
       allrepos.push(...response.data.items);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
     }
+    const filteredRepos = allrepos.filter((repo) => {
+      return repo.open_issues_count && repo.open_issues_count > 9;
+    });
 
-    const repos = allrepos.map((repo) => ({
+    const repos = filteredRepos.map((repo) => ({
       name: repo.name,
       fullname: repo.full_name,
       forks: repo.forks_count,

@@ -1,13 +1,22 @@
 import {
   Chart as ChartJS,
-  BarElement,
+  LineElement, // Changed from BarElement
   CategoryScale,
   LinearScale,
+  PointElement, // Added - needed for Line charts
   Tooltip,
   Legend,
 } from "chart.js";
+import { Line } from "react-chartjs-2";
 
-ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
+ChartJS.register(
+  LineElement, // Changed from BarElement
+  CategoryScale,
+  LinearScale,
+  PointElement, // Added
+  Tooltip,
+  Legend,
+);
 
 export default function CommitChart({ commitData }) {
   const now = new Date();
@@ -22,7 +31,7 @@ export default function CommitChart({ commitData }) {
     datasets: [
       {
         label: "Commits per Month",
-        data: commitData.slice(-12),
+        data: commitData.slice(-6),
         backgroundColor: "rgba(54, 162, 235, 0.6)",
         borderRadius: 6,
         borderColor: "#3b82f6",
@@ -35,16 +44,48 @@ export default function CommitChart({ commitData }) {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
     elements: { line: { borderJoinStyle: "round" } },
-    plugins: { legend: { display: false }, tooltip: { enabled: false } },
+    plugins: {
+      legend: {
+        display: true,
+        position: "top",
+        labels: {
+          color: "rgb(107, 114, 128)",
+        },
+      },
+      tooltip: {
+        enabled: true,
+        backgroundColor: "rgba(0, 0, 0, 0.8)",
+        titleColor: "#ffffff",
+        bodyColor: "#ffffff",
+      },
+    },
     scales: {
-      x: { display: false },
-      y: { display: false },
+      x: {
+        display: true,
+        grid: {
+          color: "rgba(156, 163, 175, 0.2)", // Light gray grid
+        },
+        ticks: {
+          color: "rgb(107, 114, 128)", // Gray that works on light/dark
+        },
+      },
+      y: {
+        display: true,
+        beginAtZero: true,
+        grid: {
+          color: "rgba(156, 163, 175, 0.2)", // Light gray grid
+        },
+        ticks: {
+          color: "rgb(107, 114, 128)",
+        },
+      },
     },
   };
 
   return (
-    <div className="h-16 w-32">
+    <div className="h-96 w-full max-w-4xl">
       <Line data={data} options={options} />
     </div>
   );
