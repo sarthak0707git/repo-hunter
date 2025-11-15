@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import getRepos from "./routes/getRepos.js";
 import domain from "./routes/domain.js";
 import commits from "./routes/commits.js";
+import issues from "./routes/issues.js";
 const app = express();
 dotenv.config();
 app.use(express.json());
@@ -20,6 +21,7 @@ app.get("/", (req, res) => {
 app.use("/api/repos", getRepos);
 app.use("/api/domain", domain);
 app.use("/api/commits", commits);
+app.use("/api/issues", issues);
 app.listen(5000, () => {
   console.log("Connected to PORT 5000");
 });

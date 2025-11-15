@@ -19,21 +19,16 @@ router.post("/", async (req, res) => {
   };
   */
   try {
-    const response = await octokit.request(
-      "GET /repos/{owner}/{repo}/stats/commit_activity",
-      {
-        owner: repo.owner.login,
-        repo: repo.name,
-        headers: {
-          "X-GitHub-Api-Version": "2022-11-28",
-        },
+    const response = await octokit.request("GET /search/issues", {
+      q: `repo:${repo.owner.login}/${repo.name} state:open (label:"good first issue" OR label:"help wanted" OR label:"Good first Issue") `,
+      headers: {
+        "X-GitHub-Api-Version": "2022-11-28",
       },
-    );
-    res.json(response.data);
+    });
+    res.json(response.data.total_count);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Failed to fetch commit data" });
+    res.status(500).json({ error: "Failed to fetch issues data" });
   }
 });
-
 export default router;
