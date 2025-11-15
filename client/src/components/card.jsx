@@ -1,21 +1,82 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { repoStorage } from "../utils/repoStorage";
+import * as clusterStorage from "../utils/clusterStorage";
 
-export default function Card({ repo }) {
+export default function Card({ repo, clusterName, onRemove }) {
   const navigate = useNavigate();
 
   // Saving Repos
+  const [showMenu, setShowMenu] = useState(false);
+  const [allClusters, setAllClusters] = useState([]);
+  const [repoClusters, setRepoClusters] = useState([]);
+  const menuRef = useRef(null);
+
   const [isSaved, setIsSaved] = useState(false);
   useEffect(() => {
-    setIsSaved(repoStorage.isRepoSaved(repo.fullname));
+    setIsSaved(clusterStorage.IsRepoSavedInAnyCluster(repo.fullname));
   }, [repo.fullname]);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (menuRef.current && !menuRef.current.contains(event.target))
+        setShowMenu(false);
+    }
+    if (showMenu) document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showMenu]);
 
 
   const handleClick = () => {
     //FUNCTIONALITY JAGGU/PRASHU
     navigate(`/repo/${repo.owner_login}/${repo.name}`);
   };
+
+  const refreshMenuData = () => {
+    setAllClusters(clusterStorage.GetClusters());
+    setRepoClusters(clusterStorage.GetClustersForRepo(repo.fullname));
+  };
+
+  const handleMenuToggle = (e) => {
+    e.stopPropagation();
+    if (!showMenu) refreshMenuData();
+    setShowMenu(!showMenu);
+  };
+
+  const handleCreateCluster = (e) => {
+    e.stopPropagation();
+    const newName = prompt("Enter new cluster name:");
+    if (newName) {
+      clusterStorage.CreateCluster(newName);
+      refreshMenuData();
+    }
+  };
+
+  const handleAddToCluster = (e, clusterName) => {
+    e.stopPropagation();
+    clusterStorage.SaveRepoToCluster(clusterName, repo);
+    refreshMenuData();
+    setIsSaved(true);
+  };
+
+  const handleRemoveFromCluster = (e, clusterName) => {
+    e.stopPropagation();
+    clusterStorage.RemoveRepoFromCluster(clusterName, repo.fullname);
+    refreshMenuData();
+    setIsSaved(clusterStorage.IsRepoSavedInAnyCluster(repo.fullname));
+  };
+
+  const isRemoving = clusterName && onRemove;
+
+  const handleRemoveClick = (e) => {
+    e.stopPropagation();
+    onRemove(repo.fullname);
+  };
+
+  const inClusters = repoClusters;
+  const availableClusters = allClusters.filter(c => !repoClusters.includes(c));
 
   return (
     <div
@@ -44,22 +105,67 @@ export default function Card({ repo }) {
       </p>
 
       {/* SAVE BUTTON to add functionality*/}
-      <button
-        className="mt-3 rounded-md bg-[var(--button-primary-bg)] px-3 py-1 text-sm text-white hover:bg-[var(--button-primary-hover)]"
-        onClick={(e) => {
+      {/* Button Container */}
+      <div className="relative mt-3" ref={menuRef}>
+        {isRemoving ? (
+          // "Remove" button (on SavedPage)
+          <button
+            className="rounded-md bg-red-600 px-3 py-1 text-sm text-white hover:bg-red-700"
+            onClick={handleRemoveClick}
+          >
+            Remove
+          </button>
+        ) : (
+          // "Add to Cluster" button (on Search Page)
+          <button
+            className={`rounded-md px-3 py-1 text-sm text-white ${isSaved
+                ? "bg-[var(--text-tertiary)] hover:bg-[var(--text-secondary)]"
+                : "bg-[var(--button-primary-bg)] hover:bg-[var(--button-primary-hover)]"
+              }`}
+            onClick={handleMenuToggle}
+          >
+            {isSaved ? "Saved" : "Save"}
+          </button>
+        )}
 
-          e.stopPropagation();
-          if (isSaved) {
-            repoStorage.removeRepo(repo.fullname);
-            setIsSaved(false);
-          } else {
-            repoStorage.saveRepo(repo);
-            setIsSaved(true);
-          }
-        }}
-      >
-      {isSaved ? "Saved": "Save"}
-    </button>
-    </div >
+        {/* --- The Pop-up Menu --- */}
+        {showMenu && (
+          <div className="absolute top-full z-10 mt-2 min-w-48 rounded-md border border-[var(--border-strong)] bg-[var(--bg-secondary)] py-2 shadow-lg">
+            {/* 1. Create New */}
+            <button
+              onClick={handleCreateCluster}
+              className="block w-full px-4 py-2 text-left text-sm text-[var(--accent-primary)] hover:bg-[var(--bg-hover)]"
+            >
+              + Create New Cluster
+            </button>
+            <hr className="my-1 border-[var(--border-muted)]" />
+
+            {/* 2. In Clusters (Remove) */}
+            {inClusters.map((cluster) => (
+              <button
+                key={cluster}
+                onClick={(e) => handleRemoveFromCluster(e, cluster)}
+                className="flex w-full items-center justify-between px-4 py-2 text-left text-sm text-[var(--text-primary)] hover:bg-[var(--bg-hover)]"
+              >
+                <span>{cluster}</span>
+                <span className="text-xs text-red-500">Remove</span>
+              </button>
+            ))}
+
+            {/* 3. Available Clusters (Add) */}
+            {availableClusters.map((cluster) => (
+              <button
+                key={cluster}
+                onClick={(e) => handleAddToCluster(e, cluster)}
+                className="flex w-full items-center justify-between px-4 py-2 text-left text-sm text-[var(--text-primary)] hover:bg-[var(--bg-hover)]"
+              >
+                <span>{cluster}</span>
+                <span className="text-xs text-green-600">Add</span>
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
