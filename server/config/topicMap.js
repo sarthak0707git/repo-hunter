@@ -104,7 +104,7 @@ export const domainTopicsMap = {
 
   Cybersecurity: {
     topics: [
-      "security",
+      "network-security",
       "cybersecurity",
       "infosec",
       "ethical-hacking",

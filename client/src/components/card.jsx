@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import * as clusterStorage from "../utils/clusterStorage";
 
-export default function Card({ repo, clusterName, onRemove }) {
+export default function Card({ repo, clusterName, onRemove, selectedrepo }) {
   const navigate = useNavigate();
   const [monthlyData, setMonthlyData] = useState([]);
   const [helpfulIssues, setHelpfulIssues] = useState([]);
@@ -26,9 +26,12 @@ export default function Card({ repo, clusterName, onRemove }) {
     };
   }, [showMenu]);
 
-
   const handleClick = async () => {
     console.log("Card clicked:", repo.fullname);
+    selectedrepo(repo);
+
+    // Saving Repos
+
     navigate(`/repo/${repo.owner.login}/${repo.name}`);
     try {
       const response = await fetch(`http://localhost:5000/api/issues`, {
@@ -84,14 +87,16 @@ export default function Card({ repo, clusterName, onRemove }) {
 
   const handleRemoveClick = (e) => {
     e.stopPropagation();
-    const confirmed = window.confirm(`Remove ${repo.fullname} from "${clusterName}"?`);
+    const confirmed = window.confirm(
+      `Remove ${repo.fullname} from "${clusterName}"?`,
+    );
     if (!confirmed) return;
     onRemove(repo.fullname);
   };
 
   const inClusters = repoClusters;
   const availableClusters = allClusters.filter(
-    (c) => !repoClusters.includes(c)
+    (c) => !repoClusters.includes(c),
   );
 
   return (
@@ -132,10 +137,11 @@ export default function Card({ repo, clusterName, onRemove }) {
         ) : (
           // "Add to Cluster" button (on Search Page)
           <button
-            className={`rounded-md px-3 py-1 text-sm text-white ${isSaved
-              ? "bg-[var(--text-tertiary)] hover:bg-[var(--text-secondary)]"
-              : "bg-[var(--button-primary-bg)] hover:bg-[var(--button-primary-hover)]"
-              }`}
+            className={`rounded-md px-3 py-1 text-sm text-white ${
+              isSaved
+                ? "bg-[var(--text-tertiary)] hover:bg-[var(--text-secondary)]"
+                : "bg-[var(--button-primary-bg)] hover:bg-[var(--button-primary-hover)]"
+            }`}
             onClick={handleMenuToggle}
           >
             {isSaved ? "Saved" : "Save"}

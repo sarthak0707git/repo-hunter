@@ -60,7 +60,9 @@ function Insights() {
         const res = await fetch("http://localhost:5000/api/issues", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ repo: { owner: { login: owner }, name: repo } }),
+          body: JSON.stringify({
+            repo: { owner: { login: owner }, name: repo },
+          }),
         });
         if (res.ok) {
           const count = await res.json();
@@ -81,13 +83,14 @@ function Insights() {
     const fetchRepoDetails = async () => {
       try {
         setLoadingDetails(true);
-        const res = await fetch(`http://localhost:5000/api/repo/${owner}/${repo}`);
+        const res = await fetch(
+          `http://localhost:5000/api/repo/${owner}/${repo}`,
+        );
         if (res.ok) {
           const data = await res.json();
           setRepoDetails(data.details);
           setRepoLanguages(data.languages);
         } else console.error("Failed to fetch repo details");
-
       } catch (err) {
         console.error(err);
       } finally {
@@ -125,8 +128,9 @@ function Insights() {
             Repo Details
           </h2>
           <div className="space-y-4 p-4 rounded-lg border border-[var(--border-muted)]">
-
-            {loadingDetails && <p className="text-[var(--text-secondary)]">Loading details...</p>}
+            {loadingDetails && (
+              <p className="text-[var(--text-secondary)]">Loading details...</p>
+            )}
 
             {!loadingDetails && repoDetails && (
               <>
@@ -136,31 +140,42 @@ function Insights() {
 
                 <div className="flex flex-wrap gap-x-6 gap-y-3">
                   <div className="flex flex-col">
-                    <span className="text-xs font-medium text-[var(--text-tertiary)] uppercase">Stars</span>
+                    <span className="text-xs font-medium text-[var(--text-tertiary)] uppercase">
+                      Stars
+                    </span>
                     <span className="text-2xl font-bold text-[var(--text-strong)]">
-                      {repoDetails.starCount.toLocaleString() ?? '...'}
+                      {repoDetails.starCount.toLocaleString() ?? "..."}
                     </span>
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-xs font-medium text-[var(--text-tertiary)] uppercase">Forks</span>
+                    <span className="text-xs font-medium text-[var(--text-tertiary)] uppercase">
+                      Forks
+                    </span>
                     <span className="text-2xl font-bold text-[var(--text-strong)]">
-                      {repoDetails.forkCount.toLocaleString() ?? '...'}
+                      {repoDetails.forkCount.toLocaleString() ?? "..."}
                     </span>
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-xs font-medium text-[var(--text-tertiary)] uppercase">Good First Issues</span>
+                    <span className="text-xs font-medium text-[var(--text-tertiary)] uppercase">
+                      Good First Issues
+                    </span>
                     <span className="text-2xl font-bold text-[var(--text-strong)]">
-                      {goodFirstIssues ?? '...'}
+                      {goodFirstIssues ?? "..."}
                     </span>
                   </div>
                 </div>
 
                 {repoLanguages && repoLanguages.length > 0 && (
                   <div>
-                    <h3 className="text-md font-semibold text-[var(--text-strong)] mb-2">Languages</h3>
+                    <h3 className="text-md font-semibold text-[var(--text-strong)] mb-2">
+                      Languages
+                    </h3>
                     <div className="flex flex-wrap gap-2">
                       {repoLanguages.map((lang) => (
-                        <span key={lang} className="inline-block rounded-full border border-[var(--border-muted)] bg-[var(--bg-tertiary)] px-3 py-1 text-xs font-medium text-[var(--text-secondary)]">
+                        <span
+                          key={lang}
+                          className="inline-block rounded-full border border-[var(--border-muted)] bg-[var(--bg-tertiary)] px-3 py-1 text-xs font-medium text-[var(--text-secondary)]"
+                        >
                           {lang}
                         </span>
                       ))}
@@ -176,19 +191,17 @@ function Insights() {
                     className=" w-full text-sm font-medium text-[var(--button-primary-bg)]  "
                   >
                     {`${owner}/${repo}`}
-                    <br />(opens in a new tab)
+                    <br />
+                    (opens in a new tab)
                   </a>
                 </div>
               </>
             )}
-
           </div>
         </div>
-
       </div>
     </main>
   );
 }
 
 export default Insights;
-

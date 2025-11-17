@@ -9,7 +9,6 @@ import HomePage from "./pages/HomePage";
 import Insights from "./pages/Insights";
 import Clusters from "./pages/Clusters";
 
-
 function App() {
   const [domains, setDomains] = useState([]);
   const [selectedDomains, setSelectedDomains] = useState([]);
@@ -22,6 +21,7 @@ function App() {
 
   const [languages, setLanguages] = useState([]);
   const [selectedLanguages, setSelectedLanguages] = useState([]);
+  const [selectedRepo, setSelectedRepo] = useState([]);
 
   useEffect(() => {
     const fetchDomains = async () => {
@@ -157,6 +157,7 @@ function App() {
               languages={languages}
               selectedLanguages={selectedLanguages}
               toggleLanguage={toggleLanguage}
+              selectedrepo={setSelectedRepo}
             />
           }
         />
