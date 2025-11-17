@@ -4,55 +4,11 @@ import { Routes, Route, useParams } from "react-router-dom";
 import "./App.css";
 import Topbar from "./components/Topbar";
 import Footer from "./components/Footer";
-import DomainSelector from "./components/DomainSelector";
+
+import HomePage from "./pages/HomePage";
 import Insights from "./pages/Insights";
+import Clusters from "./pages/Clusters";
 
-function HomePage({
-  domains,
-  selectedDomains,
-  topics,
-  handleDomainClick,
-  selectedTopics,
-  repos,
-  loading,
-  error,
-  toggleTopic,
-  fetchRepos,
-  languages,
-  selectedLanguages,
-  toggleLanguage,
-}) {
-  return (
-    <main className="mx-auto max-w-5xl flex w-full flex-col gap-10 px-4 py-12 ">
-      <DomainSelector
-        domains={domains}
-        selectedDomains={selectedDomains}
-        topics={topics}
-        handleDomainClick={handleDomainClick}
-        selectedTopics={selectedTopics}
-        repos={repos}
-        loading={loading}
-        error={error}
-        toggleTopic={toggleTopic}
-        fetchRepos={fetchRepos}
-        languages={languages}
-        selectedLanguages={selectedLanguages}
-        toggleLanguage={toggleLanguage}
-      />
-    </main>
-  );
-}
-/*
-function Insights() {
-
-  const { owner, repo } = useParams();
-
-  return (
-    <main className="mx-auto max-w-5xl flex w-full flex-col gap-10 px-4 py-12 ">
-      <h1 className="text-2xl font-semibold tracking-tight text-[var(--text-strong)] sm:text-3xl">
-        Insights for: {owner}/{repo}
-      </h1>
-    Add commit chart n other stuff  */
 
 function App() {
   const [domains, setDomains] = useState([]);
@@ -205,6 +161,7 @@ function App() {
           }
         />
         <Route path="/repo/:owner/:repo" element={<Insights />} />
+        <Route path="/clusters" element={<Clusters />} />
       </Routes>
       <Footer />
     </div>

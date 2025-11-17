@@ -15,7 +15,7 @@ function TopicBox({
 
     return (
         <>
-            <div className="panel-animate w-full rounded-md border border-[var(--border-muted)] bg-[var(--bg-secondary)] p-5 text-left shadow-inner shadow-[var(--shadow)]/60 sm:p-6">
+            <div className="panel-animate w-full rounded-md border border-[var(--border-muted)] bg-[var(--bg-tertiary)] p-5 text-left shadow-inner shadow-[var(--shadow)]/60 sm:p-6">
                 <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
                     <h3 className="text-lg font-semibold text-[var(--text-strong)] sm:text-xl">
                         Topics from selected domains

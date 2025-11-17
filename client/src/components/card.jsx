@@ -25,10 +25,10 @@ export default function Card({ repo, clusterName, onRemove }) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [showMenu]);
+
+
   const handleClick = async () => {
     console.log("Card clicked:", repo.fullname);
-
-    // Saving Repos
     navigate(`/repo/${repo.owner.login}/${repo.name}`);
     try {
       const response = await fetch(`http://localhost:5000/api/issues`, {
@@ -56,7 +56,7 @@ export default function Card({ repo, clusterName, onRemove }) {
     if (!showMenu) refreshMenuData();
     setShowMenu(!showMenu);
   };
-
+  // Saving Repos
   const handleCreateCluster = (e) => {
     e.stopPropagation();
     const newName = prompt("Enter new cluster name:");
@@ -84,6 +84,8 @@ export default function Card({ repo, clusterName, onRemove }) {
 
   const handleRemoveClick = (e) => {
     e.stopPropagation();
+    const confirmed = window.confirm(`Remove ${repo.fullname} from "${clusterName}"?`);
+    if (!confirmed) return;
     onRemove(repo.fullname);
   };
 
@@ -118,13 +120,11 @@ export default function Card({ repo, clusterName, onRemove }) {
         Issues: {repo.open_issues}
       </p>
 
-      {/* SAVE BUTTON to add functionality*/}
-      {/* Button Container */}
       <div className="relative mt-3" ref={menuRef}>
         {isRemoving ? (
           // "Remove" button (on SavedPage)
           <button
-            className="rounded-md bg-red-600 px-3 py-1 text-sm text-white hover:bg-red-700"
+            className="rounded-md bg-[var(--bg-tertiary)] px-3 py-1 text-sm text-red-500 border border-transparent hover:border-[var(--border-strong)]"
             onClick={handleRemoveClick}
           >
             Remove
@@ -133,8 +133,8 @@ export default function Card({ repo, clusterName, onRemove }) {
           // "Add to Cluster" button (on Search Page)
           <button
             className={`rounded-md px-3 py-1 text-sm text-white ${isSaved
-                ? "bg-[var(--text-tertiary)] hover:bg-[var(--text-secondary)]"
-                : "bg-[var(--button-primary-bg)] hover:bg-[var(--button-primary-hover)]"
+              ? "bg-[var(--text-tertiary)] hover:bg-[var(--text-secondary)]"
+              : "bg-[var(--button-primary-bg)] hover:bg-[var(--button-primary-hover)]"
               }`}
             onClick={handleMenuToggle}
           >
