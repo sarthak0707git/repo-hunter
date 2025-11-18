@@ -34,7 +34,7 @@ function Insights() {
 
             const totalCommits = monthSlice.reduce(
               (sum, week) => sum + week.total,
-              0
+              0,
             );
 
             months.push(totalCommits);
@@ -84,7 +84,7 @@ function Insights() {
       try {
         setLoadingDetails(true);
         const res = await fetch(
-          `http://localhost:5000/api/repo/${owner}/${repo}`
+          `http://localhost:5000/api/repo/${owner}/${repo}`,
         );
         if (res.ok) {
           const data = await res.json();
@@ -163,6 +163,14 @@ function Insights() {
                       {goodFirstIssues ?? "..."}
                     </span>
                   </div>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs font-medium text-[var(--text-tertiary)] uppercase">
+                    Last Updated At
+                  </span>
+                  <span className="text-2xl font-bold text-[var(--text-strong)]">
+                    {new Date(repoDetails.updatedAt).toLocaleString()}
+                  </span>
                 </div>
 
                 {repoLanguages && repoLanguages.length > 0 && (

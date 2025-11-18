@@ -54,6 +54,7 @@ function App() {
         if (response.ok) {
           const data = await response.json();
           setTopics((prev) => prev.filter((t) => !data.includes(t)));
+          setSelectedTopics((prev) => prev.filter((t) => !data.includes(t)));
         }
       } catch (error) {
         console.error("Error removing topics for unselected domain:", error);

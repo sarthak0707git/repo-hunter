@@ -60,7 +60,7 @@ router.post("/", async (req, res) => {
       // Wait before retrying (exponential backoff)
       retries++;
       if (retries < maxRetries) {
-        await new Promise((resolve) => setTimeout(resolve, 20000));
+        await new Promise((resolve) => setTimeout(resolve, 25000));
       }
     }
     res.json(response.data);
