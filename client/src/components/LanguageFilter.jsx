@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function LanguageFilter({ languages = [], selectedLanguages = [], toggleLanguage }) {
     if (!languages || languages.length === 0) return null;
 
