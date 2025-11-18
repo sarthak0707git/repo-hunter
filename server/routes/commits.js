@@ -1,7 +1,12 @@
+import "dotenv/config"; // Add this line
 import express from "express";
 import { Octokit } from "@octokit/core";
 const router = express.Router();
-
+// In commits.js - Add this at the top to debug
+console.log(
+  "this is commit.js and GitHub Token:",
+  process.env.GITHUB_TOKEN ? "✅ Found" : "❌ Missing",
+);
 const octokit = new Octokit({
   auth: process.env.GITHUB_TOKEN,
 });
@@ -18,12 +23,13 @@ router.post("/", async (req, res) => {
   };
   */
   try {
-    let attempts = 0;
-    const maxAttempts = 3;
-    let data = null;
+    let retries = 0;
+    const maxRetries = 3;
+    let response;
+
     // Retry logic for GitHub stats API
-    while (attempts < maxAttempts) {
-      const response = await octokit.request(
+    while (retries < maxRetries) {
+      response = await octokit.request(
         "GET /repos/{owner}/{repo}/stats/commit_activity",
         {
           owner: owner,
@@ -33,34 +39,31 @@ router.post("/", async (req, res) => {
           },
         },
       );
-      console.log(`Attempt ${attempts + 1} for ${owner}/${repo}`);
-      console.log("Response status:", response.status);
-      console.log("Response data type:", typeof response.data);
-      console.log("Is array?", Array.isArray(response.data));
-      // Check if data is ready (should be an array with 52 weeks)
       if (Array.isArray(response.data) && response.data.length > 0) {
-        data = response.data;
         console.log(
-          `✓ Stats ready for ${owner}/${repo} after ${attempts + 1} attempts`,
+          `✓ Stats ready for ${owner}/${repo} after ${retries + 1} attempts`,
         );
         break;
       }
-
-      // If status is 202, stats are being computed
+      // Check if data is ready (not 202 and not empty array)
+      if (
+        response.status === 200 &&
+        response.data &&
+        response.data.length > 0
+      ) {
+        break;
+      }
       if (response.status === 202) {
         console.log(`Stats being computed for ${owner}/${repo}, waiting...`);
       }
 
-      // If response is empty object or empty array, wait and retry
-      console.log(
-        `⏳ Attempt ${attempts + 1}: Stats not ready, retrying in 2s...`,
-      );
-      attempts++;
-      if (attempts < maxAttempts) {
-        await new Promise((resolve) => setTimeout(resolve, 15000)); // Wait 2 seconds
+      // Wait before retrying (exponential backoff)
+      retries++;
+      if (retries < maxRetries) {
+        await new Promise((resolve) => setTimeout(resolve, 20000));
       }
     }
-    res.json(data);
+    res.json(response.data);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to fetch commit data" });

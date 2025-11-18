@@ -1,3 +1,4 @@
+import "dotenv/config"; // Add this line
 import express from "express";
 import { Octokit } from "@octokit/core";
 const router = express.Router();
@@ -18,7 +19,7 @@ router.post("/", async (req, res) => {
     full_name: "dtrupenn/Tetris",
   };
   */
-  const query = `repo:${repo.owner.login}/${repo.name} type:issue label:"good first issue" `;
+  const query = `repo:${repo.owner.login}/${repo.name} type:issue state:open label:"good first issue" `;
   try {
     const response = await octokit.request("GET /search/issues", {
       q: query,
