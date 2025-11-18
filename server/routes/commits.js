@@ -24,7 +24,7 @@ router.post("/", async (req, res) => {
   */
   try {
     let retries = 0;
-    const maxRetries = 3;
+    const maxRetries = 4;
     let response;
 
     // Retry logic for GitHub stats API
@@ -60,7 +60,7 @@ router.post("/", async (req, res) => {
       // Wait before retrying (exponential backoff)
       retries++;
       if (retries < maxRetries) {
-        await new Promise((resolve) => setTimeout(resolve, 22000));
+        await new Promise((resolve) => setTimeout(resolve, 20000));
       }
     }
     res.json(response.data);

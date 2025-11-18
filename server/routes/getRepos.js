@@ -56,7 +56,7 @@ router.post("/", async (req, res) => {
     const allrepos = [];
     for (const chunk of modifiedTopics) {
       const topicPart = chunk.join(" OR ");
-      const query = `${topicPart} NOT roadmap NOT awesome in:readme,topics,description,name archived:false mirror:false template:false pushed:>2025-06-01 good-first-issues:>4 stars:>1000 `;
+      const query = `${topicPart} NOT roadmap NOT awesome in:readme,topics,description,name archived:false mirror:false template:false pushed:>2025-06-01 good-first-issues:>4 stars:>500 `;
       const response = await octokit.request("GET /search/repositories", {
         q: query,
         order: "desc",
